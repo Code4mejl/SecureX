@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureX</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; color: #222; }
+  h1 { color: #2c3e50; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+  label { display: block; margin-top: 10px; font-weight: bold; }
+  input, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
+  button { margin-top: 16px; padding: 10px 20px; background: #2c3e50; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+  button:hover { background: #1a242f; }
+  #batchResult { margin-top: 10px; font-family: monospace; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<h1>🔐 SecureX</h1>
+<p>AES file encryption / decryption with single-file and multithreaded batch modes.</p>
+
+<div class="card">
+  <h2>Single File Encrypt</h2>
+  <form action="/encrypt" method="post" enctype="multipart/form-data">
+    <label>File</label>
+    <input type="file" name="file" required>
+    <label>Password</label>
+    <input type="password" name="password" required>
+    <button type="submit">Encrypt &amp; Download</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Single File Decrypt</h2>
+  <form action="/decrypt" method="post" enctype="multipart/form-data">
+    <label>File (.enc)</label>
+    <input type="file" name="file" required>
+    <label>Password</label>
+    <input type="password" name="password" required>
+    <button type="submit">Decrypt &amp; Download</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Batch Process (Sequential vs Parallel)</h2>
+  <form id="batchForm">
+    <label>Files</label>
+    <input type="file" name="files" multiple required>
+    <label>Password</label>
+    <input type="password" name="password" required>
+    <label>Action</label>
+    <select name="encrypt">
+      <option value="true">Encrypt</option>
+      <option value="false">Decrypt</option>
+    </select>
+    <label>Mode</label>
+    <select name="mode">
+      <option value="parallel">Parallel</option>
+      <option value="sequential">Sequential</option>
+    </select>
+    <button type="submit">Run Batch</button>
+  </form>
+  <div id="batchResult"></div>
+</div>
+
+<script>
+document.getElementById('batchForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const resultEl = document.getElementById('batchResult');
+  resultEl.textContent = 'Processing...';
+
+  try {
+    const res = await fetch('/process-batch', { method: 'POST', body: formData });
+    const text = await res.text();
+    resultEl.textContent = text;
+  } catch (err) {
+    resultEl.textContent = 'Error: ' + err;
+  }
+});
+</script>
+
+</body>
+</html>
