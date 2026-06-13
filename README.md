@@ -137,37 +137,4 @@ curl -X POST http://localhost:8081/process-batch \
 
 This design lets multiple files be encrypted/decrypted **simultaneously** across CPU cores, significantly reducing total processing time for batches compared to the sequential engine.
 
-## Deployment (Render)
 
-1. Push the project to GitHub.
-2. Create a new **Web Service** on [Render](https://render.com), connect your repo.
-3. Build command:
-   ```
-   mvn clean package
-   ```
-4. Start command:
-   ```
-   java -jar target/securex-0.0.1-SNAPSHOT.jar
-   ```
-5. `application.properties` already uses `server.port=${PORT:8081}`, so Render's assigned port works automatically.
-
-## Security Notes ⚠️
-
-This project is intended for learning/portfolio purposes. For production use, consider:
-
-- **Key derivation**: replace the simple password-padding scheme with PBKDF2/Argon2 + salt.
-- **Cipher mode**: switch from AES/ECB (Java's default with no mode specified) to AES/GCM with a random IV per file, for authenticated encryption.
-- **Error handling**: add clear error responses for incorrect passwords / corrupted files.
-- **Temp file cleanup**: delete temporary files created during batch processing after use.
-
-## Future Improvements
-
-- AES-GCM with per-file random IV and authentication tag
-- PBKDF2-based key derivation with salt
-- Progress tracking for large batch jobs
-- Simple frontend UI for upload/download
-- Configurable thread pool size via `application.properties`
-
-## License
-
-MIT
