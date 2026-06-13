@@ -2,6 +2,9 @@
 
 SecureX is a Spring Boot web application for encrypting and decrypting files using AES, with both **single-file** and **multithreaded batch processing** modes.
 
+# Live Demo 
+https://securex-29fr.onrender.com/
+
 ## Features
 
 - **File Encryption / Decryption** — encrypt or decrypt a single file via REST API.
